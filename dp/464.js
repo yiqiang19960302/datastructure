@@ -29,25 +29,25 @@ var canIWin = function (maxChoosableInteger, desiredTotal) {
   }
 
   let cache = new Map();
-  let used = new Array(maxChoosableInteger + 1).fill(false);
+  let used = new Array(maxChoosableInteger + 1).fill(0);
 
   function helper(desiredTotal) {
     if (desiredTotal <= 0) {
       return false;
     }
-    let key = format(used);
+    let key = used.join("");
 
     if (!cache.has(key)) {
       for (let i = 1; i <= maxChoosableInteger; i++) {
         if (!used[i]) {
-          used[i] = true;
+          used[i] = 1;
           //check whether this lead to a lose of the other player
           if (!helper(desiredTotal - i)) {
             cache.set(key, true);
-            used[i] = false;
+            used[i] = 0;
             return true;
           }
-          used[i] = false;
+          used[i] = 0;
         }
       }
       cache.set(key, false);
@@ -58,14 +58,3 @@ var canIWin = function (maxChoosableInteger, desiredTotal) {
 
   return helper(desiredTotal);
 };
-
-function format(used) {
-  let res = 0;
-  for (let ele of used) {
-    res <<= 1;
-    if (ele) {
-      res |= 1;
-    }
-  }
-  return res;
-}
