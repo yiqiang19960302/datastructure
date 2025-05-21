@@ -1,0 +1,25 @@
+{
+  "name": "datastructure",
+  "version": "1.0.0",
+  "description": "learning and practice for datastructure",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yiqiang19960302/datastructure.git"
+  },
+  "keywords": [
+    "datastructure"
+  ],
+  "author": "yiqiang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yiqiang19960302/datastructure/issues"
+  },
+  "homepage": "https://github.com/yiqiang19960302/datastructure#readme",
+  "dependencies": {
+    "@datastructures-js/priority-queue": "^6.3.3"
+  }
+}
