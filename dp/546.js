@@ -74,4 +74,101 @@ class RemoveBoxes {
 
     return [score, newBoxes];
   }
+
+  dpOptimal(boxes) {
+    let merged = [];
+    let points = [];
+    let count = 1;
+
+    for (let i = 0; i < boxes.length; i++) {
+      if (boxes[i] !== boxes[i + 1]) {
+        merged.push(boxes[i]);
+        points.push(count);
+        count = 1;
+        continue;
+      }
+      count++;
+    }
+
+    let n = merged.length;
+
+    const dp = Array.from({ length: n }, () =>
+      Array.from({ length: n }, () => new Array(boxes.length).fill(0))
+    );
+
+    // dp[l][r][k] = dp[l][r-1][0] + (k+1)*(k+1) // 直接移除 boxes[r] 和它 k 个相同颜色
+    // 尝试将 boxes[r] 与中间的某个 boxes[i] 合并
+    // dp[l][r][k] = Math.max(dp[l][r][k], dp[l][i][k+1] + dp[i+1][r-1][0]) for  l<i<r
+
+    function dfs(l, r, k) {
+      if (l > r) return 0;
+      if (dp[l][r][k] > 0) return dp[l][r][k];
+
+      // 1. 直接移除 boxes[r]及其后缀
+      let point = points[r] + k;
+
+      let res = dfs(l, r - 1, 0) + point * point;
+
+      // 2. try to merge boxes[r] with boxes[i] with the same color in the middle
+      for (let i = l; i < r; i++) {
+        if (merged[i] === merged[r]) {
+          res = Math.max(res, dfs(l, i, point) + dfs(i + 1, r - 1, 0));
+        }
+      }
+
+      dp[l][r][k] = res;
+
+      return res;
+    }
+    return dfs(0, n - 1, 0);
+  }
 }
+
+let boxes = [1, 3, 2, 2, 2, 3, 4, 3, 1];
+// let boxes = [1, 1, 1];
+let removeBoxes = new RemoveBoxes();
+
+console.log(removeBoxes.dpOptimal(boxes));
+
+// var removeBoxesNew = function (boxes) {
+//   const merged = []
+//   const points = []
+//   let count = 1
+
+//   for (let i = 0; i < boxes.length; i++) {
+//     if (boxes[i] !== boxes[i + 1]) {
+//       merged.push(boxes[i])
+//       points.push(count)
+//       count = 1
+//       continue
+//     }
+//     count++
+//   }
+
+//   const size = merged.length;
+//   const dp = Array.from({ length: size }, () => Array.from({ length: size }, () => new Uint16Array(boxes.length)))
+
+//   const calculate = (l, r, p) => {
+//     if (l > r) {
+//         return 0
+//     }
+
+//     if (dp[l][r][p]) {
+//         return dp[l][r][p]
+//     }
+
+//     let point = points[l] + p
+//     let max = point * point + calculate(l + 1, r, 0)
+
+//     for (let i = l + 1; i <= r; i++) {
+//       if (merged[i] === merged[l]) {
+//         max = Math.max(max, calculate(l + 1, i - 1, 0) + calculate(i, r, point))
+//       }
+//     }
+
+//     dp[l][r][p] = max
+//     return max
+//   }
+
+//   return calculate(0, size - 1, 0)
+// }
