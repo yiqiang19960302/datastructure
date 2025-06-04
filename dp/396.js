@@ -15,4 +15,26 @@
  * @param {number[]} nums
  * @return {number}
  */
-var maxRotateFunction = function (nums) {};
+var maxRotateFunction = function (nums) {
+  let res = 0;
+  let sum = 0;
+  for (let i = 0; i < nums.length; i++) {
+    sum += nums[i];
+    res += nums[i] * i;
+  }
+  let n = nums.length - 1;
+
+  let idx = nums.length - 1;
+  let prevRes = res;
+  while (idx >= 0) {
+    prevRes = prevRes - nums[idx] * n + sum - nums[idx];
+    res = Math.max(res, prevRes);
+    idx -= 1;
+  }
+
+  return res;
+};
+
+let nums = [4, 3, 2, 6];
+
+console.log(maxRotateFunction(nums));
